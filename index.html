@@ -2,23 +2,22 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Conversor de Itinerario Famiglia</title>
+  <title>Conversor de Itinerario</title>
   <style>
     body {
       font-family: monospace;
       background-color: #f5f5f5;
       padding: 20px;
     }
-    textarea {
+    textarea, pre {
       width: 100%;
       font-size: 16px;
       padding: 10px;
-      margin-bottom: 10px;
     }
     button {
       font-size: 16px;
       padding: 10px 20px;
-      margin-right: 10px;
+      margin: 10px 10px 20px 0;
       background: #007bff;
       color: white;
       border: none;
@@ -26,18 +25,19 @@
     }
     pre {
       background: white;
-      padding: 15px;
       border: 1px solid #ccc;
-      white-space: pre-wrap;
+      white-space: pre;
     }
   </style>
 </head>
 <body>
 
-  <h2>✈️ Conversor de Itinerario Famiglia</h2>
+  <h2>✈️ Conversor de Itinerario</h2>
+
   <textarea id="input" rows="12" placeholder="Pegá el itinerario completo de Amadeus..."></textarea><br>
   <button onclick="convertir()">Convertir</button>
   <button onclick="limpiar()">Limpiar</button>
+
   <h3>🧾 Resultado:</h3>
   <pre id="output"></pre>
 
@@ -47,31 +47,30 @@
       const lineas = input.split("\\n");
       let resultado = "";
 
-      // Detectar pasajero
+      // Buscar pasajero
       const pasajeroRegex = /^\\s*\\d+\\.\\s*([A-Z]+\\/[A-Z ]+)/im;
       const pasajeroMatch = input.match(pasajeroRegex);
       if (pasajeroMatch) {
         resultado += pasajeroMatch[1].trim() + "\\n";
       }
 
-      // Regex para vuelos
-      const vueloRegex = /^\\s*\\d+\\s+(\\w{2})\\s?(\\d{3,4})\\s+\\w\\s+(\\d{2}[A-Z]{3})\\s+\\d\\*?([A-Z]{6})\\s+(?:HK|DK)\\d\\s+(\\d{4})\\s+(\\d{4})/;
+      // Buscar vuelos
+      const vueloRegex = /^\\s*\\d+\\s+(\\w{2})\\s*(\\d{3,4})\\s+\\w\\s+(\\d{2}[A-Z]{3})\\s+\\d\\*?([A-Z]{6})\\s+(?:HK|DK)\\d\\s+(\\d{4})\\s+(\\d{4})/;
 
-      for (const linea of lineas) {
+      lineas.forEach(linea => {
         const match = linea.match(vueloRegex);
         if (match) {
-          const codigo = match[1];
-          const numero = match[2];
+          const cod = match[1];
+          const num = match[2].padEnd(4, " ");
           const fecha = match[3];
           const ruta = match[4];
           const salida = match[5];
           const llegada = match[6];
-
-          resultado += `${codigo} ${numero.padEnd(4)}  ${fecha} ${ruta}  ${salida} ${llegada}\\n`;
+          resultado += `${cod} ${num}  ${fecha} ${ruta}  ${salida} ${llegada}\\n`;
         }
-      }
+      });
 
-      document.getElementById("output").textContent = resultado.trim() || "⛔ No se detectaron vuelos válidos.";
+      document.getElementById("output").textContent = resultado.trim() || "⛔ No se detectaron vuelos.";
     }
 
     function limpiar() {

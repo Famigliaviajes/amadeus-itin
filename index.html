@@ -56,20 +56,12 @@
       let resultado = "";
 
       const aerolineas = {
-        AZ: "Alitalia", LH: "Lufthansa", AR: "Aerolíneas Argentinas",
-        IB: "Iberia", AF: "Air France", KL: "KLM", UX: "Air Europa",
-        AM: "Aeroméxico", AA: "American Airlines", DL: "Delta",
-        UA: "United", CM: "Copa Airlines", LA: "LATAM", AV: "Avianca",
-        G3: "GOL", FR: "Ryanair", VY: "Vueling", W6: "Wizz Air",
-        B6: "JetBlue", AC: "Air Canada", BA: "British Airways",
-        H2: "Sky Airline"
+        AV: "Avianca", G3: "GOL", H2: "Sky Airline", AA: "American Airlines",
+        LA: "LATAM", AR: "Aerolíneas Argentinas", CM: "Copa Airlines"
       };
 
       const aeropuertos = {
-        EZE: "Buenos Aires", AEP: "Buenos Aires", GRU: "San Pablo",
-        SSA: "Salvador de Bahía", JFK: "Nueva York", MAD: "Madrid",
-        CDG: "París", LHR: "Londres", MIA: "Miami", BCN: "Barcelona",
-        BOG: "Bogotá"
+        EZE: "Buenos Aires", AEP: "Buenos Aires", BOG: "Bogotá", MIA: "Miami"
       };
 
       const pasajerosRegex = /\d+\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/g;
@@ -83,8 +75,7 @@
         resultado += "Pasajeros:\n" + pasajeros.map((p, i) => `${i + 1}. ${p}`).join("\n") + "\n\n";
       }
 
-      // Acepta vuelos con HK o DK y días como 7*
-      const regexVuelo = /^\s*\d+\s+([A-Z0-9]{2})(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d?\*?([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
+      const regexVuelo = /^\s*\d+\s+([A-Z0-9]{2})\s*(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d\*?([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})?/;
 
       lineas.forEach(linea => {
         const match = linea.match(regexVuelo);
@@ -94,7 +85,7 @@
           const fecha = match[3];
           const ruta = match[4];
           const salida = match[5];
-          const llegada = match[6];
+          const llegada = match[6] || "----";
 
           const nombreAerolinea = (aerolineas[cod] || cod);
           const fechaFmt = fecha.padEnd(7);
@@ -139,4 +130,3 @@
 
 </body>
 </html>
-

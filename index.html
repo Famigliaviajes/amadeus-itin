@@ -52,7 +52,7 @@
 
     function convertir() {
       const input = document.getElementById("input").value;
-      const lineas = input.split("\n");
+      const lineas = input.split("\\n");
       let resultado = "";
 
       const aerolineas = {
@@ -61,7 +61,8 @@
         AM: "Aeroméxico", AA: "American Airlines", DL: "Delta",
         UA: "United", CM: "Copa Airlines", LA: "LATAM", AV: "Avianca",
         G3: "GOL", FR: "Ryanair", VY: "Vueling", W6: "Wizz Air",
-        B6: "JetBlue", AC: "Air Canada", BA: "British Airways", H2: "Sky Airline"
+        B6: "JetBlue", AC: "Air Canada", BA: "British Airways",
+        H2: "Sky Airline"
       };
 
       const aeropuertos = {
@@ -70,7 +71,7 @@
         CDG: "París", LHR: "Londres", MIA: "Miami", BCN: "Barcelona"
       };
 
-      const pasajerosRegex = /\d+\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/g;
+      const pasajerosRegex = /\\d+\\.\\s*([A-Z]+\\/[A-Z ]+(?:\\(CHD\\))?)/g;
       const pasajeros = [];
       let matchPasajero;
       while ((matchPasajero = pasajerosRegex.exec(input)) !== null) {
@@ -78,12 +79,10 @@
       }
 
       if (pasajeros.length > 0) {
-        resultado += `Pasajeros:\n` + pasajeros.map((p, i) => `${i + 1}. ${p}`).join("\n") + "\n\n";
-      } else {
-        resultado += "Pasajeros: No detectados\n\n";
+        resultado += "Pasajeros:\\n" + pasajeros.map((p, i) => `${i + 1}. ${p}`).join("\\n") + "\\n\\n";
       }
 
-      const regexVuelo = /^\s*\d+\s+([A-Z0-9]{2})\s*(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d\s+([A-Z]{6})\s+HK\d\s+(\d{4})\s+(\d{4})/;
+      const regexVuelo = /^\\s*\\d+\\s+([A-Z0-9]{2})\\s*(\\d{3,4})\\s+\\w\\s+(\\d{2}[A-Z]{3})\\s+\\d\\s+([A-Z]{6})\\s+HK\\d\\s+(\\d{4})\\s+(\\d{4})/;
 
       lineas.forEach(linea => {
         const match = linea.match(regexVuelo);
@@ -103,7 +102,7 @@
           const destinoNombre = aeropuertos[destino] || destino;
           const rutaFmt = `${origenNombre} → ${destinoNombre}`.padEnd(34);
 
-          resultado += `${nombreAerolinea} ${num}  ${fechaFmt}${rutaFmt}${salida} ${llegada}\n`;
+          resultado += `${nombreAerolinea} ${num}  ${fechaFmt}${rutaFmt}${salida} ${llegada}\\n`;
         }
       });
 

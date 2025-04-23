@@ -1,93 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Itinerario con Pasajero + Aerolínea</title>
+  <meta charset="UTF-8">
+  <title>Conversor de Itinerario Famiglia</title>
   <style>
     body {
-      font-family: monospace;
-      background: #f4f4f4;
-      padding: 2em;
-      max-width: 800px;
-      margin: auto;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+      color: #333;
     }
-    textarea, pre {
+    textarea {
       width: 100%;
-      font-size: 14px;
+      font-size: 16px;
       padding: 10px;
-      margin-top: 10px;
+      margin-bottom: 10px;
     }
     button {
       padding: 10px 20px;
-      margin-top: 15px;
       font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
       cursor: pointer;
+      margin-bottom: 20px;
     }
     pre {
       background: #fff;
-      border: 1px solid #ccc;
-      min-height: 100px;
-    }
-  </style>
-</head>
-<body>
-  <h2>✈️ Conversor de Itinerario Compacto</h2>
-
-  <textarea id="input" rows="10" placeholder="Pegá el itinerario completo de Amadeus..."></textarea>
-  <button onclick="convertir()">Convertir</button>
-
-  <h3>🧾 Resultado:</h3>
-  <pre id="output"></pre>
-
-  <script>
-    function convertir() {
-      const input = document.getElementById("input").value;
-      const lineas = input.split("\n");
-      let resultado = "";
-
-      const aerolineas = {
-        AZ: "Alitalia",
-        LH: "Lufthansa",
-        AR: "Aerolíneas Argentinas",
-        IB: "Iberia",
-        AF: "Air France",
-        KL: "KLM",
-        UX: "Air Europa",
-        AM: "Aeroméxico",
-        AA: "American Airlines",
-        DL: "Delta",
-        UA: "United",
-        CM: "Copa Airlines",
-        LA: "LATAM",
-        AV: "Avianca"
-      };
-
-      const pasajeroRegex = /1\.([A-Z]+\/[A-Z ]+)/i;
-      const pasajeroMatch = input.match(pasajeroRegex);
-      const pasajero = pasajeroMatch ? pasajeroMatch[1].trim() : "Desconocido";
-
-      resultado += `Pasajero: ${pasajero}\n\n`;
-
-      const regexVuelo = /^\s*\d+\s+([A-Z]{2})\s+(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d?\*?([A-Z]{6})\s+HK\d\s+(\d{4})\s+(\d{4})/;
-
-      lineas.forEach(linea => {
-        const match = linea.match(regexVuelo);
-        if (match) {
-          const cod = match[1];
-          const num = match[2];
-          const fecha = match[3];
-          const ruta = match[4];
-          const salida = match[5];
-          const llegada = match[6];
-          const nombreAerolinea = aerolineas[cod] || cod;
-
-          resultado += `${nombreAerolinea} ${cod}${num}  ${fecha}  ${ruta}  ${salida} ${llegada}\n`;
-        }
-      });
-
-      document.getElementById("output").textContent = resultado.trim() || "⛔ No se detectaron vuelos válidos.";
-    }
-  </script>
-</body>
-</html>
+      padding: 15px;
+      border: 1px solid #

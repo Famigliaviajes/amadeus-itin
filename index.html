@@ -57,16 +57,21 @@
         G3: "GOL"
       };
 
-      // Detectar todos los pasajeros, incluso si están en la misma línea
-      const pasajerosMatch = input.match(/\d+\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/g);
-      if (pasajerosMatch) {
-        const pasajeros = pasajerosMatch.map(p => p.trim());
-        resultado += `Pasajeros:\n${pasajeros.join("\n")}\n\n`;
+      // Buscar TODOS los pasajeros, incluso si están en la misma línea
+      const pasajerosRegex = /\d+\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/g;
+      const pasajeros = [];
+      let matchPasajero;
+      while ((matchPasajero = pasajerosRegex.exec(input)) !== null) {
+        pasajeros.push(matchPasajero[1].trim());
+      }
+
+      if (pasajeros.length > 0) {
+        resultado += `Pasajeros:\n` + pasajeros.map((p, i) => `${i + 1}. ${p}`).join("\n") + "\n\n";
       } else {
         resultado += "Pasajeros: No detectados\n\n";
       }
 
-      // Detectar vuelos con nuevo regex adaptado
+      // Regex para vuelos con formato Amadeus
       const regexVuelo = /^\s*\d+\s+([A-Z0-9]{2})\s*(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d\s+([A-Z]{6})\s+HK\d\s+(\d{4})\s+(\d{4})/;
 
       lineas.forEach(linea => {

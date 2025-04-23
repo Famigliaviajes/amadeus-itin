@@ -19,11 +19,12 @@
     button {
       padding: 10px 20px;
       font-size: 16px;
+      margin-right: 10px;
+      margin-bottom: 20px;
       background-color: #007bff;
       color: white;
       border: none;
       cursor: pointer;
-      margin-bottom: 20px;
     }
     pre {
       background: #fff;
@@ -37,8 +38,9 @@
 
   <h2>✈️ Conversor de Itinerario Famiglia</h2>
 
-  <textarea id="input" rows="10" placeholder="Pegá el itinerario completo de Amadeus..."></textarea>
+  <textarea id="input" rows="10" placeholder="Pegá el itinerario completo de Amadeus..."></textarea><br>
   <button onclick="convertir()">Convertir</button>
+  <button onclick="limpiar()">Limpiar</button>
 
   <h3>🧾 Resultado:</h3>
   <pre id="output"></pre>
@@ -54,10 +56,17 @@
         IB: "Iberia", AF: "Air France", KL: "KLM", UX: "Air Europa",
         AM: "Aeroméxico", AA: "American Airlines", DL: "Delta",
         UA: "United", CM: "Copa Airlines", LA: "LATAM", AV: "Avianca",
-        G3: "GOL"
+        G3: "GOL", FR: "Ryanair", VY: "Vueling", W6: "Wizz Air",
+        B6: "JetBlue", AC: "Air Canada", BA: "British Airways"
       };
 
-      // Buscar TODOS los pasajeros, incluso si están en la misma línea
+      const aeropuertos = {
+        EZE: "Buenos Aires", AEP: "Buenos Aires", GRU: "San Pablo",
+        SSA: "Salvador de Bahía", JFK: "Nueva York", MAD: "Madrid",
+        CDG: "París", LHR: "Londres", MIA: "Miami", BCN: "Barcelona"
+      };
+
+      // Detectar pasajeros
       const pasajerosRegex = /\d+\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/g;
       const pasajeros = [];
       let matchPasajero;
@@ -71,7 +80,6 @@
         resultado += "Pasajeros: No detectados\n\n";
       }
 
-      // Regex para vuelos con formato Amadeus
       const regexVuelo = /^\s*\d+\s+([A-Z0-9]{2})\s*(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d\s+([A-Z]{6})\s+HK\d\s+(\d{4})\s+(\d{4})/;
 
       lineas.forEach(linea => {
@@ -85,11 +93,30 @@
           const llegada = match[6];
           const nombreAerolinea = aerolineas[cod] || cod;
 
-          resultado += `${nombreAerolinea} ${cod}${num}  ${fecha}  ${ruta}  ${salida} ${llegada}\n`;
+          const origen = ruta.slice(0, 3);
+          const destino = ruta.slice(3, 6);
+          const origenNombre = aeropuertos[origen] || origen;
+          const destinoNombre = aeropuertos[destino] || destino;
+
+          resultado += `${nombreAerolinea} ${cod}${num}  ${fecha}  ${origenNombre} → ${destinoNombre}  ${salida} ${llegada}\n`;
         }
       });
 
-      document.getElementById("output").textContent = resultado.trim() || "⛔ No se detectaron vuelos válidos.";
+      // Mostrar resultado
+      const final = resultado.trim() || "⛔ No se detectaron vuelos válidos.";
+      document.getElementById("output").textContent = final;
+
+      // Copiar al portapapeles
+      navigator.clipboard.writeText(final).then(() => {
+        console.log("Resultado copiado al portapapeles");
+      }).catch(err => {
+        console.error("Error al copiar: ", err);
+      });
+    }
+
+    function limpiar() {
+      document.getElementById("input").value = "";
+      document.getElementById("output").textContent = "";
     }
   </script>
 

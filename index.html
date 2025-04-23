@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Conversor de Itinerario</title>
+  <title>Conversor de Itinerario Famiglia</title>
   <style>
     body {
       font-family: monospace;
@@ -44,20 +44,20 @@
   <script>
     function convertir() {
       const input = document.getElementById("input").value;
-      const lineas = input.split("\\n");
+      const lineas = input.split("\n");
       let resultado = "";
 
       // Buscar pasajero
-      const pasajeroRegex = /^\\s*\\d+\\.\\s*([A-Z]+\\/[A-Z ]+)/im;
+      const pasajeroRegex = /^\s*\d+\.\s*([A-Z]+\/[A-Z ]+)/im;
       const pasajeroMatch = input.match(pasajeroRegex);
       if (pasajeroMatch) {
-        resultado += pasajeroMatch[1].trim() + "\\n";
+        resultado += pasajeroMatch[1].trim() + "\n";
       }
 
-      // Buscar vuelos
-      const vueloRegex = /^\\s*\\d+\\s+(\\w{2})\\s*(\\d{3,4})\\s+\\w\\s+(\\d{2}[A-Z]{3})\\s+\\d\\*?([A-Z]{6})\\s+(?:HK|DK)\\d\\s+(\\d{4})\\s+(\\d{4})/;
+      // Regex para vuelos
+      const vueloRegex = /^\s*\d+\s+(\w{2})\s*(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d\*?([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
 
-      lineas.forEach(linea => {
+      for (const linea of lineas) {
         const match = linea.match(vueloRegex);
         if (match) {
           const cod = match[1];
@@ -66,9 +66,9 @@
           const ruta = match[4];
           const salida = match[5];
           const llegada = match[6];
-          resultado += `${cod} ${num}  ${fecha} ${ruta}  ${salida} ${llegada}\\n`;
+          resultado += `${cod} ${num}  ${fecha} ${ruta}  ${salida} ${llegada}\n`;
         }
-      });
+      }
 
       document.getElementById("output").textContent = resultado.trim() || "⛔ No se detectaron vuelos.";
     }

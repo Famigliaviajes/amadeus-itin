@@ -82,20 +82,22 @@
         resultado += "Pasajeros:\n" + pasajeros.map((p, i) => `${i + 1}. ${p}`).join("\n") + "\n\n";
       }
 
-      const regexVuelo = /^\s*\d+\s+([A-Z0-9]{2})\s*(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d\s+([A-Z]{6})\s+HK\d\s+(\d{4})\s+(\d{4})/;
+      // Nuevo regex que acepta HK1, HK2... y DK1, DK2...
+      const regexVuelo = /^\s*\d+\s+([A-Z0-9]{2})(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d\s+([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
 
       lineas.forEach(linea => {
         const match = linea.match(regexVuelo);
         if (match) {
-          const cod = match[1];
-          const num = match[2];
-          const fecha = match[3];
-          const ruta = match[4];
-          const salida = match[5];
-          const llegada = match[6];
+          const cod = match[1];              // ej: G3
+          const num = match[2];              // ej: 7637
+          const fecha = match[3];            // ej: 13SEP
+          const ruta = match[4];             // ej: AEPGRU
+          const salida = match[5];           // ej: 1020
+          const llegada = match[6];          // ej: 1315
 
           const nombreAerolinea = (aerolineas[cod] || cod);
           const fechaFmt = fecha.padEnd(7);
+
           const origen = ruta.slice(0, 3);
           const destino = ruta.slice(3, 6);
           const origenNombre = aeropuertos[origen] || origen;

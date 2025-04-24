@@ -53,7 +53,7 @@
     let resultadoFinal = "";
 
     function extraerPasajeros(input) {
-      const pasajerosRegex = /\\d+\\.\\s*([A-Z]+\\/[A-Z ]+(?:\\(CHD\\))?)/g;
+      const pasajerosRegex = /\d+\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/g;
       let match;
       const pasajeros = [];
       while ((match = pasajerosRegex.exec(input)) !== null) {
@@ -64,15 +64,15 @@
 
     function convertir() {
       const input = document.getElementById("input").value;
-      const lineas = input.split("\\n");
+      const lineas = input.split("\n");
       let resultado = "";
 
       const pasajeros = extraerPasajeros(input);
       if (pasajeros.length > 0) {
-        resultado += pasajeros.join("\\n") + "\\n";
+        resultado += pasajeros.join("\n") + "\n";
       }
 
-      const vueloRegex = /^\\s*\\d+\\s+(\\w{2})\\s*(\\d{3,4})\\s+\\w\\s+(\\d{2}[A-Z]{3})\\s+\\d\\*?([A-Z]{6})\\s+(?:HK|DK)\\d\\s+(\\d{4})\\s+(\\d{4})/;
+      const vueloRegex = /^\s*\d+\s+(\w{2})\s*(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d\*?([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
 
       for (const linea of lineas) {
         const match = linea.match(vueloRegex);
@@ -83,29 +83,25 @@
           const ruta = match[4].padEnd(7, " ");
           const salida = match[5];
           const llegada = match[6];
-          resultado += `${cod} ${num} ${fecha} ${ruta} ${salida} ${llegada}\\n`;
+          resultado += `${cod} ${num} ${fecha} ${ruta} ${salida} ${llegada}\n`;
         }
       }
 
       resultadoFinal = resultado.trim() || "⛔ No se detectaron vuelos.";
       document.getElementById("output").textContent = resultadoFinal;
-
-      navigator.clipboard.writeText(resultadoFinal)
-        .then(() => console.log("✂️ Copiado automáticamente"))
-        .catch(err => console.error("Error al copiar: ", err));
     }
 
     function convertirCotizacion() {
       const input = document.getElementById("input").value;
-      const lineas = input.split("\\n");
+      const lineas = input.split("\n");
       let resultado = "";
 
       const pasajeros = extraerPasajeros(input);
       if (pasajeros.length > 0) {
-        resultado += pasajeros.join("\\n") + "\\n";
+        resultado += pasajeros.join("\n") + "\n";
       }
 
-      const vueloRegex = /^\\s*\\d+\\s+(\\w{2})(\\d{3,4})\\s+\\w\\s+(\\d{2}[A-Z]{3})\\s+\\d\\*?([A-Z]{6})\\s+(?:HK|DK)\\d\\s+(\\d{4})\\s+(\\d{4})/;
+      const vueloRegex = /^\s*\d+\s+(\w{2})(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d\*?([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
 
       for (const linea of lineas) {
         const match = linea.match(vueloRegex);
@@ -116,16 +112,12 @@
           const ruta = match[4].padEnd(7, " ");
           const salida = match[5];
           const llegada = match[6];
-          resultado += `${cod}${num}  ${fecha} ${ruta} ${salida} ${llegada}\\n`;
+          resultado += `${cod}${num}  ${fecha} ${ruta} ${salida} ${llegada}\n`;
         }
       }
 
       resultadoFinal = resultado.trim() || "⛔ No se detectaron vuelos.";
       document.getElementById("output").textContent = resultadoFinal;
-
-      navigator.clipboard.writeText(resultadoFinal)
-        .then(() => console.log("✂️ Copiado automáticamente"))
-        .catch(err => console.error("Error al copiar: ", err));
     }
 
     function limpiar() {

@@ -72,7 +72,7 @@
         resultado += pasajeros.join("\n") + "\n";
       }
 
-      const vueloRegex = /^\s*\d+\s+(\w{2})\s*(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d(?:\*|\s)?([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
+      const vueloRegex = /^\s*\d+\s+(\w{2})\s*(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+(?:\d\*?|\d\s)([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
 
       for (const linea of lineas) {
         const match = linea.match(vueloRegex);
@@ -101,7 +101,7 @@
         resultado += pasajeros.join("\n") + "\n";
       }
 
-      const vueloRegex = /^\s*\d+\s+(\w{2})(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d(?:\*|\s)?([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
+      const vueloRegex = /^\s*\d+\s+(\\w{2})(\\d{3,4})\\s+\\w\\s+(\\d{2}[A-Z]{3})\\s+(?:\\d\\*?|\\d\\s)([A-Z]{6})\\s+(?:HK|DK)\\d\\s+(\\d{4})\\s+(\\d{4})/;
 
       for (const linea of lineas) {
         const match = linea.match(vueloRegex);

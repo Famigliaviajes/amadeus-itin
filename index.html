@@ -1,138 +1,104 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Conversor de Itinerario</title>
-  <style>
-    body {
-      font-family: monospace;
-      background-color: #f5f5f5;
-      padding: 20px;
-    }
-    textarea, pre {
-      width: 100%;
-      font-size: 16px;
-      padding: 10px;
-    }
-    button {
-      font-size: 16px;
-      padding: 10px 20px;
-      margin: 10px 10px 20px 0;
-      border: none;
-      cursor: pointer;
-    }
-    button.convertir {
-      background: #007bff;
-      color: white;
-    }
-    button.cotizacion {
-      background: #0033A0;
-      color: white;
-    }
-    pre {
-      background: white;
-      border: 1px solid #ccc;
-      white-space: pre;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Conversor de Itinerario</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+    textarea, pre {
+      width: 100%;
+      font-size: 16px;
+      padding: 10px;
+    }
+    button {
+      font-size: 16px;
+      padding: 10px 20px;
+      margin: 10px 10px 20px 0;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    pre {
+      background: white;
+      border: 1px solid #ccc;
+      white-space: pre;
+    }
+  </style>
 </head>
 <body>
 
-  <h2>✈️ Conversor de Itinerario</h2>
+  <h2> Conversor de Itinerario</h2>
 
-  <textarea id="input" rows="12" placeholder="Pegá el itinerario completo de Amadeus..."></textarea><br>
-  <button class="convertir" onclick="convertir()">Convertir</button>
-  <button class="cotizacion" onclick="convertirCotizacion()">Convertir Cotización</button>
-  <button onclick="limpiar()">Limpiar</button>
-  <button onclick="copiar()">Copiar</button>
+  <textarea id="input" rows="12" placeholder="Pegá el itinerario completo de Amadeus..."></textarea><br>
+  <button onclick="convertir()">Convertir</button>
+  <button onclick="limpiar()">Limpiar</button>
+  <button onclick="copiar()">Copiar</button>
 
-  <h3>🧾 Resultado:</h3>
-  <pre id="output"></pre>
+  <h3> Resultado:</h3>
+  <pre id="output"></pre>
 
-  <script>
-    let resultadoFinal = "";
+  <script>
+    let resultadoFinal = "";
 
-    function extraerPasajeros(input) {
-      const pasajerosRegex = /\d+\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/g;
-      let match;
-      const pasajeros = [];
-      while ((match = pasajerosRegex.exec(input)) !== null) {
-        pasajeros.push(match[1].trim());
-      }
-      return pasajeros;
-    }
+    function convertir() {
+      const input = document.getElementById("input").value;
+      const lineas = input.split("\n");
+      let resultado = "";
 
-    function convertir() {
-      const input = document.getElementById("input").value;
-      const lineas = input.split("\n");
-      let resultado = "";
+      const pasajerosRegex = /\d+\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/g;
+      let match;
+      const pasajeros = [];
 
-      const pasajeros = extraerPasajeros(input);
-      if (pasajeros.length > 0) {
-        resultado += pasajeros.join("\n") + "\n";
-      }
+      while ((match = pasajerosRegex.exec(input)) !== null) {
+        pasajeros.push(match[1].trim());
+      }
 
-      const vueloRegex = /^\s*\d+\s+(\w{2})\s*(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d(?:\*|\s)?\s*([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
+      if (pasajeros.length > 0) {
+        resultado += pasajeros.join("\n") + "\n";
+      }
 
-      for (const linea of lineas) {
-        const match = linea.match(vueloRegex);
-        if (match) {
-          const cod = match[1];
-          const num = match[2].padEnd(4, " ");
-          const fecha = match[3];
-          const ruta = match[4].padEnd(7, " ");
-          const salida = match[5];
-          const llegada = match[6];
-          resultado += `${cod} ${num} ${fecha} ${ruta} ${salida} ${llegada}\n`;
-        }
-      }
+      const vueloRegex = /^\s*\d+\s+(\w{2})\s*(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d\*?([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
 
-      resultadoFinal = resultado.trim() || "⛔ No se detectaron vuelos.";
-      document.getElementById("output").textContent = resultadoFinal;
-    }
+      for (const linea of lineas) {
+        const match = linea.match(vueloRegex);
+        if (match) {
+          const cod = match[1];
+          const num = match[2].padEnd(4, " ");
+          const fecha = match[3];
+          const ruta = match[4].padEnd(7, " ");
+          const salida = match[5];
+          const llegada = match[6];
+          resultado += `${cod} ${num} ${fecha} ${ruta} ${salida} ${llegada}\n`;
+        }
+      }
 
-    function convertirCotizacion() {
-      const input = document.getElementById("input").value;
-      const lineas = input.split("\n");
-      let resultado = "";
+      resultadoFinal = resultado.trim() || " No se detectaron vuelos.";
+      document.getElementById("output").textContent = resultadoFinal;
 
-      const pasajeros = extraerPasajeros(input);
-      if (pasajeros.length > 0) {
-        resultado += pasajeros.join("\n") + "\n";
-      }
+      // Copiar automáticamente al portapapeles
+      navigator.clipboard.writeText(resultadoFinal)
+        .then(() => console.log(" Copiado automáticamente"))
+        .catch(err => console.error("Error al copiar: ", err));
+    }
 
-      const vueloRegex = /^\s*\d+\s+(\w{2})(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d(?:\*|\s)?\s*([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
+    function limpiar() {
+      document.getElementById("input").value = "";
+      document.getElementById("output").textContent = "";
+      resultadoFinal = "";
+    }
 
-      for (const linea of lineas) {
-        const match = linea.match(vueloRegex);
-        if (match) {
-          const cod = match[1];
-          const num = match[2];
-          const fecha = match[3];
-          const ruta = match[4].padEnd(7, " ");
-          const salida = match[5];
-          const llegada = match[6];
-          resultado += `${cod}${num}  ${fecha} ${ruta} ${salida} ${llegada}\n`;
-        }
-      }
-
-      resultadoFinal = resultado.trim() || "⛔ No se detectaron vuelos.";
-      document.getElementById("output").textContent = resultadoFinal;
-    }
-
-    function limpiar() {
-      document.getElementById("input").value = "";
-      document.getElementById("output").textContent = "";
-      resultadoFinal = "";
-    }
-
-    function copiar() {
-      if (!resultadoFinal) return;
-      navigator.clipboard.writeText(resultadoFinal)
-        .then(() => alert("✂️ Resultado copiado al portapapeles"))
-        .catch(err => alert("Error al copiar: " + err));
-    }
-  </script>
+    function copiar() {
+      if (!resultadoFinal) return;
+      navigator.clipboard.writeText(resultadoFinal)
+        .then(() => alert(" Resultado copiado al portapapeles"))
+        .catch(err => alert("Error al copiar: " + err));
+    }
+  </script>
 
 </body>
 </html>

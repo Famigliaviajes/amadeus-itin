@@ -43,16 +43,18 @@
   <pre id="output"></pre>
 
   <script>
+    let resultadoFinal = "";
+
     function limpiarItinerario() {
       const input = document.getElementById("input").value;
       const lineas = input.split("\n");
       let resultado = "";
 
-      // Regex para pasajeros del 1 al 9
+      // Regex para nombres de pasajeros
       const regexPasajero = /^\s*[1-9]\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/i;
 
-      // Regex para vuelos
-      const regexVuelo = /^\s*\d*\s*([A-Z0-9]{2,3})\s*(\d{3,4})\s+([A-Z])\s+(\d{2}[A-Z]{3})\s+\d\*?\s*([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
+      // Regex para vuelos (sin línea ni clase obligatoria)
+      const regexVuelo = /^\s*(\d+)?\s*([A-Z0-9]{2,3})\s*(\d{3,4})\s*([A-Z]?)\s+(\d{2}[A-Z]{3})\s+\d\*?\s*([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
 
       for (const linea of lineas) {
         const pasajero = linea.match(regexPasajero);
@@ -63,13 +65,13 @@
 
         const match = linea.match(regexVuelo);
         if (match) {
-          const aerolinea = match[1];
-          const vuelo = match[2];
-          const clase = match[3];
-          const fecha = match[4];
-          const ruta = match[5];
-          const salida = match[6];
-          const llegada = match[7];
+          const aerolinea = match[2];
+          const vuelo = match[3];
+          const clase = match[4] || "-";
+          const fecha = match[5];
+          const ruta = match[6];
+          const salida = match[7];
+          const llegada = match[8];
           resultado += `${aerolinea} ${vuelo} ${clase} ${fecha} ${ruta} DK1  ${salida} ${llegada}\n`;
         }
       }

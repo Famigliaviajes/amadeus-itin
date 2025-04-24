@@ -45,17 +45,16 @@
   <script>
     function limpiarItinerario() {
       const input = document.getElementById("input").value;
-      const lineas = input.split("\\n");
+      const lineas = input.split("\n");
       let resultado = "";
 
-      const regexPasajero = /^\\s*[1-9]\\.\\s*([A-Z]+\\/[A-Z ]+(?:\\(CHD\\))?)/i;
-
-      const regexVuelo = /^\\s*(\\d+)?\\s*([A-Z0-9]{2,3})\\s*(\\d{3,4})\\s*([A-Z]?)\\s+(\\d{2}[A-Z]{3})\\s+\\d\\*?\\s*([A-Z]{6})\\s+(?:HK|DK)\\d\\s+(\\d{4})\\s+(\\d{4})/;
+      const regexPasajero = /^\s*[1-9]\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/i;
+      const regexVuelo = /^\s*(\d+)?\s*([A-Z0-9]{2,3})\s*(\d{3,4})\s*[A-Z]?\s+(\d{2}[A-Z]{3})\s+\d\*?\s*([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
 
       for (const linea of lineas) {
         const pasajero = linea.match(regexPasajero);
         if (pasajero) {
-          resultado += pasajero[1].trim() + "\\n";
+          resultado += pasajero[1].trim() + "\n";
           continue;
         }
 
@@ -63,11 +62,11 @@
         if (match) {
           const aerolinea = match[2];
           const vuelo = match[3];
-          const fecha = match[5];
-          const ruta = match[6];
-          const salida = match[7];
-          const llegada = match[8];
-          resultado += `${aerolinea}${vuelo}  ${fecha} ${ruta} ${salida} ${llegada}\\n`;
+          const fecha = match[4];
+          const ruta = match[5];
+          const salida = match[6];
+          const llegada = match[7];
+          resultado += `${aerolinea}${vuelo}  ${fecha} ${ruta} ${salida} ${llegada}\n`;
         }
       }
 

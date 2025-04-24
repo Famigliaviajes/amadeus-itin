@@ -18,10 +18,16 @@
       font-size: 16px;
       padding: 10px 20px;
       margin: 10px 10px 20px 0;
-      background: #007bff;
-      color: white;
       border: none;
       cursor: pointer;
+    }
+    button.convertir {
+      background: #007bff;
+      color: white;
+    }
+    button.cotizacion {
+      background: #0033A0;
+      color: white;
     }
     pre {
       background: white;
@@ -35,7 +41,8 @@
   <h2>✈️ Conversor de Itinerario</h2>
 
   <textarea id="input" rows="12" placeholder="Pegá el itinerario completo de Amadeus..."></textarea><br>
-  <button onclick="convertir()">Convertir</button>
+  <button class="convertir" onclick="convertir()">Convertir</button>
+  <button class="cotizacion" onclick="convertirCotizacion()">Convertir Cotización</button>
   <button onclick="limpiar()">Limpiar</button>
   <button onclick="copiar()">Copiar</button>
 
@@ -45,19 +52,22 @@
   <script>
     let resultadoFinal = "";
 
+    function extraerPasajeros(input) {
+      const pasajerosRegex = /\d+\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/g;
+      let match;
+      const pasajeros = [];
+      while ((match = pasajerosRegex.exec(input)) !== null) {
+        pasajeros.push(match[1].trim());
+      }
+      return pasajeros;
+    }
+
     function convertir() {
       const input = document.getElementById("input").value;
       const lineas = input.split("\n");
       let resultado = "";
 
-      const pasajerosRegex = /\d+\.\s*([A-Z]+\/[A-Z ]+(?:\(CHD\))?)/g;
-      let match;
-      const pasajeros = [];
-
-      while ((match = pasajerosRegex.exec(input)) !== null) {
-        pasajeros.push(match[1].trim());
-      }
-
+      const pasajeros = extraerPasajeros(input);
       if (pasajeros.length > 0) {
         resultado += pasajeros.join("\n") + "\n";
       }
@@ -80,7 +90,39 @@
       resultadoFinal = resultado.trim() || "⛔ No se detectaron vuelos.";
       document.getElementById("output").textContent = resultadoFinal;
 
-      // Copiar automáticamente al portapapeles
+      navigator.clipboard.writeText(resultadoFinal)
+        .then(() => console.log("✂️ Copiado automáticamente"))
+        .catch(err => console.error("Error al copiar: ", err));
+    }
+
+    function convertirCotizacion() {
+      const input = document.getElementById("input").value;
+      const lineas = input.split("\n");
+      let resultado = "";
+
+      const pasajeros = extraerPasajeros(input);
+      if (pasajeros.length > 0) {
+        resultado += pasajeros.join("\n") + "\n";
+      }
+
+      const vueloRegex = /^\s*\d+\s+(\w{2})(\d{3,4})\s+\w\s+(\d{2}[A-Z]{3})\s+\d\*?([A-Z]{6})\s+(?:HK|DK)\d\s+(\d{4})\s+(\d{4})/;
+
+      for (const linea of lineas) {
+        const match = linea.match(vueloRegex);
+        if (match) {
+          const cod = match[1];
+          const num = match[2];
+          const fecha = match[3];
+          const ruta = match[4].padEnd(7, " ");
+          const salida = match[5];
+          const llegada = match[6];
+          resultado += `${cod}${num}  ${fecha} ${ruta} ${salida} ${llegada}\n`;
+        }
+      }
+
+      resultadoFinal = resultado.trim() || "⛔ No se detectaron vuelos.";
+      document.getElementById("output").textContent = resultadoFinal;
+
       navigator.clipboard.writeText(resultadoFinal)
         .then(() => console.log("✂️ Copiado automáticamente"))
         .catch(err => console.error("Error al copiar: ", err));
